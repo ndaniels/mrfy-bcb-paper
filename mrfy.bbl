@@ -1,0 +1,119 @@
+\begin{thebibliography}{10}
+
+\bibitem{Altschul:1997tl}
+S.~F. Altschul, T.~L. Madden, A.~A. Sch{\"a}ffer, J.~Zhang, Z.~Zhang,
+  W.~Miller, and D.~J. Lipman.
+\newblock {Gapped BLAST and PSI-BLAST: a new generation of protein database
+  search programs.}
+\newblock {\em Nucleic Acids Research}, 25(17):3389--3402, Sept. 1997.
+
+\bibitem{Berman:2000hl}
+H.~M. Berman, T.~N. Bhat, P.~E. Bourne, Z.~Feng, G.~Gilliland, H.~Weissig, and
+  J.~Westbrook.
+\newblock {The Protein Data Bank and the challenge of structural genomics.}
+\newblock {\em Nature structural biology}, 7 Suppl:957--959, Nov. 2000.
+
+\bibitem{Daniels:2012cm}
+N.~M. Daniels, A.~Gallant, and N.~Ramsey.
+\newblock {Experience report: Haskell in computational biology}.
+\newblock In {\em Proceedings of the 17th ACM {\ldots}}. ACM Request
+  Permissions, Sept. 2012.
+
+\bibitem{Daniels:2012dg}
+N.~M. Daniels, R.~Hosur, B.~Berger, and L.~J. Cowen.
+\newblock {SMURFLite: combining simplified Markov random fields with simulated
+  evolution improves remote homology detection for beta-structural proteins
+  into the twilight zone.}
+\newblock {\em Bioinformatics}, 28(9):1216--1222, May 2012.
+
+\bibitem{Davis:1991vx}
+L.~Davis.
+\newblock {Bit-climbing, representational bias, and test suite design}.
+\newblock In R.~K. Belew and L.~B. Booker, editors, {\em Proceedings of the
+  Fourth International Conference on Genetic Algorithms}, pages 18--23, San
+  Mateo, CA, 1991.
+
+\bibitem{Eddy:1998ut}
+S.~R. Eddy.
+\newblock {Profile hidden Markov models}.
+\newblock {\em Bioinformatics}, 14(9):755--763, Oct. 1998.
+
+\bibitem{Hentenryck:2009vn}
+P.~V. Hentenryck and L.~Michel.
+\newblock {\em {Constraint-based local search}}.
+\newblock The MIT Press, Cambridge, MA, 2005.
+
+\bibitem{Holland:1977hl}
+J.~H. Holland and J.~S. Reitman.
+\newblock {Cognitive systems based on adaptive algorithms}.
+\newblock {\em ACM SIGART Bulletin}, (63):49, June 1977.
+
+\bibitem{Kirkpatrick:1983wa}
+S.~Kirkpatrick and M.~P. Vecchi.
+\newblock {Optimization by simmulated annealing}.
+\newblock {\em Science (New York, N.Y.)}, 1983.
+
+\bibitem{Kumar:2009tp}
+A.~Kumar and L.~Cowen.
+\newblock {Augmented training of hidden Markov models to recognize remote
+  homologs via simulated evolution}.
+\newblock {\em Bioinformatics}, 25(13):1602--1608, 2009.
+
+\bibitem{Kumar:2010wv}
+A.~Kumar and L.~Cowen.
+\newblock {Recognition of beta-structural motifs using hidden Markov models
+  trained with simulated evolution}.
+\newblock {\em Bioinformatics}, 26(ISMB 2010):i287--i293, 2010.
+
+\bibitem{Loh:2012br}
+P.-R. Loh, M.~Baym, and B.~Berger.
+\newblock {Compressive genomics.}
+\newblock {\em Nature biotechnology}, 30(7):627--630, July 2012.
+
+\bibitem{McGuffin:2000wx}
+L.~J. McGuffin, K.~Bryson, and D.~T. Jones.
+\newblock {The PSIPRED protein structure prediction server}.
+\newblock {\em Bioinformatics}, 2000.
+
+\bibitem{Menke:2010ti}
+M.~Menke, B.~Berger, and L.~Cowen.
+\newblock {Markov random fields reveal an N-terminal double beta-propeller
+  motif as part of a bacterial hybrid two-component sensor system}.
+\newblock {\em Proceedings of the National Academy of Science}, 2010.
+
+\bibitem{Murzin:1995uh}
+A.~Murzin, S.~Brenner, and T.~Hubbard.
+\newblock {SCOP: a structural classification of proteins database for the
+  investigation of sequences and structures}.
+\newblock {\em Journal of Molecular Biology}, 247(4):536--540, 1995.
+
+\bibitem{Naamati:2009eg}
+G.~Naamati, M.~Askenazi, and M.~Linial.
+\newblock {ClanTox: a classifier of short animal toxins.}
+\newblock {\em Nucleic Acids Research}, 37(Web Server issue):W363--8, July
+  2009.
+
+\bibitem{Soding:2005ff}
+J.~S{\"o}ding.
+\newblock {Protein homology detection by HMM-HMM comparison}.
+\newblock {\em Bioinformatics}, 21(7):951--960, Mar. 2005.
+
+\bibitem{Sonego:2008uy}
+P.~Sonego, A.~Kocsor, and S.~Pongor.
+\newblock {ROC analysis: applications to the classification of biological
+  sequences and 3D structures.}
+\newblock {\em Briefings in bioinformatics}, 9(3):198--209, May 2008.
+
+\bibitem{Tirosh:2012iq}
+Y.~Tirosh, N.~Morpurgo, M.~Cohen, M.~Linial, and G.~Bloch.
+\newblock {Raalin, a transcript enriched in the honey bee brain, is a remnant
+  of genomic rearrangement in \emph{Hymenoptera}.}
+\newblock {\em Insect molecular biology}, 21(3):305--318, June 2012.
+
+\bibitem{Xu:2003p3417}
+J.~Xu, M.~Li, D.~Kim, and Y.~Xu.
+\newblock {Raptor: Optimal Protein Threading By Linear Programming}.
+\newblock {\em Journal of Bioinformatics and Computational Biology},
+  1(1):95--117, 2003.
+
+\end{thebibliography}
