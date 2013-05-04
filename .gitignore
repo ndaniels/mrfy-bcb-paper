@@ -1,2 +1,5 @@
 mrfy.pdf
 *.graffle
+*.synctex*
+*.aux
+*.log
