@@ -43,12 +43,12 @@
 
 \begin{document}
 
-\title{MRFy: Protein Remote Homology Detection Using Markov Random Fields and
-Stochastic Search}
+\title{MRFy: Remote Homology Detection for Beta-Structural Proteins
+  Using Markov Random Fields and Stochastic Search}
 
 \author{Noah M. Daniels \hspace*{8pt} Andrew Gallant \hspace*{8pt} Norman 
 Ramsey \hspace*{8pt} 
-Lenore Cowen\thanks{Corresponding author: cowen@cs.tufts.edu}
+Lenore Cowen\thanks{Corresponding author: lenore.cowen@tufts.edu}
 \\ Department of Computer Science, Tufts University \\ 161 College Ave, 
 Medford, MA 02155.}
 
@@ -75,75 +75,74 @@ Medford, MA 02155.}
 
 \section{Introduction}
 
-Given the sequence of a gene, researchers possess a variety of tools for 
-determining the structure and function of the corresponding protein--a task 
-that generally relies on remote homology detection, or finding evolutionarily 
-related, reasonably similar proteins of known structure and function, which may 
-differ significantly in sequence. 
+Recognition of remote homologs from protein sequence is a challenging
+problem, particularly for beta-structural motifs, where many of the
+residues whose interactions drive the fold can be a long way, and
+variable distance apart in sequence. Many of the popular
+sequence-based methods for recognizing close homologs, such as Profile
+Hidden Markov Models (HMMs)~\cite{blah,blah}, perform particularly poorly on
+beta-structural motifs, precisely because the HMM model is not
+powerful enough to capture these long-range dependencies~\cite{blah}. Several ways
+to generalize these HMMs to Markov Random Fields (MRFs) have therefore
+been proposed~\cite{blah,blah,blah}, but with the additional power of the Random Field comes
+several computational challenges. In particular, there is a tradeoff
+between the complexity of the Random Field, and both the amount of
+training data required, as well as the computational complexity of
+computing the optimum parse of new sequences to the model.
 
-One tool for remote homology detection is the profile hidden Markov model 
-(HMM), such as HMMER or SAM. 
-HMMs detect close homologs quickly, but lack the power to detect more 
-evolutionarily distant remote homologs. 
-These more distant remote homologs are more readily detected by other methods, 
-such as threading and profile-profile HMMs.
-However, these other methods have their own limitations. 
-Typical threading approaches, such as RAPTOR-X, excel at detecting remote 
-homologs based on structural similarity, but have massive computational 
-demands.
-Profile-profile HMMs, such as HHPred, build sequence alignment based profiles 
-for the query as well as the training data, construct a profile HMM from the 
-query alignment as well as the training data, and then align the two HMMs with 
-each other.
-Using closely homologous sequences in the query profile allows profile-profile 
-HMMs detect more remote homologs accurately, but building the query profile 
-requires performing a sequence-based homology search, which is still 
-computationally expensive, though not as much so as threading approaches.
 
-Some researchers have suggested augmenting HMMs with more sophisticated 
-dependency graphs, which transforms them into Markov random fields (MRFs).
-Unlike HMMs, which model only local dependencies among neighboring residues, 
-MRFs can capture nonlocal interactions, such as the conservation of hydrogen- 
-bonded residues in paired $\beta$ strands. 
-SMURF (Structural Motifs Using Random Fields)~\cite{Menke:2010ti} used this 
-$\beta$-strand information to recognize remote homologs in the $\beta$ propeller 
-folds better than HMM methods. 
+In 2010, Menke, Berger and Cowen introduced
+SMURF)~\cite{Menke:2010ti}, a Markov Random Field method designed to
+recognize protein sequences that would fold into beta-propeller
+shapes. While SMURF greatly improved beta-propeller recognition over
+existing HMM and threading methods, it was actually quite simple as
+far as MRFs go: it combined a score based on a standard profile Hidden
+Markov model with a conditional probability score that incorporated
+the statistical preferences of the amino acid residues that are
+hydrogen-bonded in beta-sheets, thereby capturing some of the
+strongest long-range dependencies in beta-structural motifs.  The
+pairwise statistical preferences were learned from solved
+beta-structures across the entire PDB, so there was sufficient
+training data. However, there was a great computational cost: the
+minimum energy parse of the sequence to the Markov Random Field model
+was generated exactly using a doubly-exponential multi-dimensional
+dynamic program.
 
-However, SMURF is limited in its usefulness because it uses multidimensional 
-dynamic programming to compute an optimal parse of a query sequence onto the 
-MRF, and its computational complexity is exponential in something called the 
-interleave number of a structure. 
-This interleave number is simply the number of intervening $\beta$ strands (in 
-sequence) between a pair of hydrogen-bonded, paired $\beta$ strands. 
-$\beta$ propellers have a maximum interleave number of three, and thus they are 
-tractable for SMURF. 
-In contrast, some $\beta$ barrels and sandwiches have an interleave number as
-high as 12, and thus, SMURF's computational complexity blows up.
 
-In earlier work~\cite{Daniels:2012dg}, we explored a method for simplifying the
-computational complexity of the Markov random field, as well as an approach,
-called ``simulated evolution,'' for mitigating the loss in accuracy resulting
-from this simplification.
-This approach, called SMURFLite, outperformed several existing
-methods at remote homology detection in $\beta$-barrels and propellers.
+This computational cost was the barrier that prevented the SMURF MRF
+from being applied directly to other beta-structures, not just
+propellers.  When run on beta-barrels, or other beta-structures with
+even moderately complex strand interleaving patterns, the exact
+computation of the SMURF MRF became completely intractable. There are
+two ways to approach this computational bottleneck. One is to simplify
+the Random Field, and only consider some of the pairwise statistical
+preferences for the beta-strands that are more local in sequence.
+This is the approach we took in a 2012 paper of Daniels, Hosur, Berger
+and Cowen, when we designed SMURFLite~\cite{Daniels:2012dg}. The other
+approach, would be to retain the entire SMURF MRF, but consider
+stochastic search approaches to heuristically explore parses of the
+sequence to the MRF, in order to find low-energy but not necessarily
+minimum-energy parses. This is the approach we take in the present
+work.
 
-In this work, we demonstrate another approach for computing the SMURF energy 
-function for remote homology detection.
-Building upon the $\beta$-structural Markov random field templates from SMURF 
-and
-SMURFLite, we demonstrate a method for remote homology detection that does not
-discard any $\beta$-structural information, and yet remains computationally 
-tractable on any protein structure.
-
-We have developed MRFy, an algorithm that relies on stochastic search to find
-a near-optimal parse of a query sequence onto the SMURF Markov random field.
-We also provide an implementation of MRFy, written in the Haskell functional
-programming language; this implementation is discussed in some detail 
+In particular, we introduce MRFy, a suite of methods to perform
+stochastic searches of the SMURF MRF. We show that MRFy, combined with
+Kumar and Cowen's {\em simulated evolution\/} outperforms HMMer, a
+popular HMM method, RaptorX, a state-of the art threading method, and
+HHPred, a profile-profile HMM method that has performed well at recent
+CASP competitions, at recognizing different beta-barrel superfamilies,
+in a stringent leave-family-out cross validation experiment. MRFy is
+available for download at \url{http://mrfy.cs.tufts.edu}  It is written in the Haskell functional
+programming language; some details of implementation are further discussed 
 in~\cite{Daniels:2012cm}.
 
-We test MRFy on all barrel folds in the mainly-$\beta$
-class of the SCOP hierarchy in stringent cross-validation
-experiments. We show a mean 0.4\% (median 1.7\%) improvement in Area Under 
+
+Finally, we find the best approach is a hybrid combination of
+SMURFLite and MRFy: we initialize the MRFy stochastic search from the
+best sequence parse that SMURFLite can find, and then run the
+stochastic search from there. On the same set of beta-barrel superfamilies 
+considered in \cite{Daniels:2012dg}, we show 
+we  show a mean XX\% (median YY\%) improvement in Area Under 
 Curve (AUC) for
 $\beta$-structural motif recognition as compared to the SMURFLite results 
 in~\cite{Daniels:2012dg}.
@@ -153,7 +152,7 @@ HMMER (\cite{Eddy:1998ut}) (a popular HMM method), a mean 29\% (median
 well-known threading method), and a mean 13\% (median 14\%) improvement in AUC 
 over HHPred (\cite{Soding:2005ff}) (a profile-profile HMM method).
 
-MRFy is available for download at \url{http://mrfy.cs.tufts.edu}
+
 
 \section{Methods}
 
