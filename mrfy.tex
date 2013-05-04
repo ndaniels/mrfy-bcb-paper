@@ -76,9 +76,9 @@ Medford, MA 02155.}
 \section{Introduction}
 
 Recognition of remote homologs from protein sequence is a challenging
-problem, particularly for beta-structural motifs, where many of the
-residues whose interactions drive the fold can be a long way, and
-variable distance apart in sequence. 
+problem, particularly for $\beta$-structural motifs, where many of the
+residues whose interactions drive the fold can be a variable, and sometimes
+long, distance apart in sequence. 
 Many of the popular
 sequence-based methods for recognizing close homologs, such as Profile
 Hidden Markov Models (HMMs)~\cite{blah,blah}, perform particularly poorly on
@@ -88,31 +88,28 @@ Several ways
 to generalize these HMMs to Markov random fields (MRFs) have therefore
 been proposed~\cite{blah,blah,blah}, but with the additional power of the 
 random field comes several computational challenges. 
-% comment by NMD: I find the following sentence extremely awkward,
-% and we did not define "parse".
-In particular, there is a tradeoff
-between the complexity of the random field, and both the amount of
-training data required, as well as the computational complexity of
-computing the optimum parse of new sequences to the model.
-
+In particular, there is a trade-off: as the complexity of the random field
+increases, so does its predictive power, but so too do the required amount of 
+training data and the computational complexity of aligning a query sequence
+to the model.
 
 In 2010, Menke, Berger and Cowen introduced
 SMURF)~\cite{Menke:2010ti}, a Markov Random Field method designed to
-recognize protein sequences that would fold into beta-propeller
+recognize protein sequences that would fold into $\beta$-propeller
 shapes. 
-While SMURF greatly improved beta-propeller recognition over
+While SMURF greatly improved $\beta$-propeller recognition over
 existing HMM and threading methods, it was actually quite simple as
 far as MRFs are concerned: it combined a score based on a standard profile 
 hidden Markov model with a conditional probability score that incorporated
 the statistical preferences of the amino acid residues that are
 hydrogen-bonded in $\beta$-sheets, thereby capturing some of the
-strongest long-range dependencies in beta-structural motifs.
+strongest long-range dependencies in $\beta$-structural motifs.
 The
 pairwise statistical preferences were learned from solved
 $\beta$-structures across the entire PDB, so there was sufficient
 training data. 
 However, there was a great computational cost: the
-minimum energy parse of the sequence to the Markov Random Field model
+minimum-energy alignment of the sequence to the Markov random field model
 was generated exactly using a doubly-exponential multi-dimensional
 dynamic program.
 
@@ -125,7 +122,7 @@ even moderately complex strand interleaving patterns, the exact
 computation of the SMURF MRF became completely intractable. 
 There are two ways to approach this computational bottleneck. 
 One is to simplify the random field, and only consider some of the pairwise 
-statistical preferences for the beta-strands that are more local in sequence.
+statistical preferences for the $\beta$-strands that are more local in sequence.
 This is the approach we took in a 2012 paper of Daniels, Hosur, Berger
 and Cowen, when we designed SMURFLite~\cite{Daniels:2012dg}. 
 The other approach would be to retain the entire SMURF MRF, but consider
@@ -139,7 +136,7 @@ stochastic searches of the SMURF MRF.
 We show that MRFy, combined with Kumar and Cowen's {\em simulated evolution\/} 
 outperforms HMMer (a popular HMM method), RaptorX (a state-of the art threading 
 method), and HHPred (a profile-profile HMM method that has performed well at 
-recent CASP competitions) at recognizing different beta-barrel superfamilies
+recent CASP competitions) at recognizing different $\beta$-barrel superfamilies
 in a stringent leave-family-out cross validation experiment. 
 MRFy is available for download at \url{http://mrfy.cs.tufts.edu}. 
 It is written in the Haskell functional programming language; some details of 
