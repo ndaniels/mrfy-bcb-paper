@@ -120,13 +120,14 @@ the propellers.
 When run on $\beta$-barrels, or other $\beta$-structures with
 even moderately complex strand interleaving patterns, the exact
 computation of the SMURF MRF became completely intractable. 
-There are two ways to approach this computational bottleneck. 
-One is to simplify the random field, and only consider some of the pairwise 
-statistical preferences for the $\beta$-strands that are more local in sequence.
-This is the approach we took in a 2012 paper of Daniels, Hosur, Berger
+There are two ways to mitigate this computational bottleneck. 
+One approach is to simplify the random field, and only consider some of the 
+pairwise statistical preferences for the $\beta$-strands that are more local in 
+sequence.
+This is the methodology we introduced in a 2012 paper of Daniels, Hosur, Berger
 and Cowen, when we designed SMURFLite~\cite{Daniels:2012dg}. 
-The other approach would be to retain the entire SMURF MRF, but consider
-stochastic search approaches to heuristically explore parses of the
+The other approach is to retain the entire SMURF MRF, but consider
+stochastic search approaches to heuristically explore alignments of the
 sequence to the MRF, in order to find low-energy but not necessarily
 minimum-energy parses.
 This is the approach we take in the present work.
@@ -1263,7 +1264,7 @@ Prokaryotic SH3-related domain & 0.81 & -  & - & {\bf 0.83} & 0.73 & 0.72 & {\bf
 \hline
 Translation proteins SH3-like & 0.83 & 0.81 & {\bf 0.86} & 0.62 & - & 0.63 & 0.63\\
  \hline
- {\bf RAPTOR performs best} & & & & & & \\
+ {\bf RAPTOR performs best} & & & & & & &\\
 \hline
 PDZ domain-like & 0.96 & {\bf 1.0} & 0.99 & 0.97 & 0.95 & 0.95 & 0.96 \\
 FMN-binding split barrel & 0.62 & {\bf 0.82} & 0.61 & - & - & - & -\\
