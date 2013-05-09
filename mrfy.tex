@@ -75,18 +75,28 @@ Medford, MA 02155.}
 
 \section{Introduction}
 
-Recognition of remote homologs from protein sequence is a challenging
-problem, particularly for $\beta$-structural motifs, where many of the
+Computational approaches to the problem of recognizing remote homologs of
+well-annotated protein structures from sequence have emerged as some of the most
+successful high-throughput strategies for developing hypotheses about the
+functions of unknown proteins.
+Recognition of remote homologs from protein sequence is a challenging problem,
+however, particularly for $\beta$-structural motifs, where many of the
 residues whose interactions drive the fold can be a variable, and sometimes
 long, distance apart in sequence. 
 Many of the popular
 sequence-based methods for recognizing close homologs, such as Profile
-Hidden Markov Models (HMMs)~\cite{blah,blah}, perform particularly poorly on
+Hidden Markov Models (HMMs)~\cite{Eddy:1998ut,Hughey:1996ub}, perform 
+particularly poorly on
 $\beta$-structural motifs, precisely because the HMM model is not
-powerful enough to capture these long-range dependencies~\cite{blah}. 
+powerful enough to capture these long-range 
+dependencies~\cite{Lifson:1980vd, Zhu:1999wr, Olmea:1999ug, 
+Cowen:2002p588,Steward:2002wz}. 
 Several ways
 to generalize these HMMs to Markov random fields (MRFs) have therefore
-been proposed~\cite{blah,blah,blah}, but with the additional power of the 
+been 
+proposed~\cite{White:1994ty, Lathrop:1996gm, Thomas:2008uw, 
+Gopalakrishnan:2009wx, Menke:2010ti, Peng:2011vk}, but with the additional 
+power of the 
 random field comes several computational challenges. 
 In particular, there is a trade-off: as the complexity of the random field
 increases, so does its predictive power, but so too do the required amount of 
@@ -134,7 +144,8 @@ This is the approach we take in the present work.
 
 In particular, we introduce MRFy, a suite of methods to perform
 stochastic searches of the SMURF MRF. 
-We show that MRFy, combined with Kumar and Cowen's {\em simulated evolution\/} 
+We show that MRFy, combined with Kumar and Cowen's 
+{\em simulated evolution\/}~\cite{Kumar:2009tp, Kumar:2010wv}
 outperforms HMMer (a popular HMM method), RaptorX (a state-of the art threading 
 method), and HHPred (a profile-profile HMM method that has performed well at 
 recent CASP competitions) at recognizing different $\beta$-barrel superfamilies
@@ -205,7 +216,7 @@ a hidden Markov model, as incorporated in HMMER~\cite{Eddy:1998ut} is:
 \def\gum{14pt}
 
 \def\maxiquad{\hskip 1.2em\relax}
-\begin{equation}
+\begin{equation*}
 \begin{array}{@{}l@{}c@{}l}
 
 V_{j}^{M}(i) &{}={}& \frac{e_{M_{j}}(x_{i})}{q_{x_{i}}} \times \max \left\{
@@ -226,7 +237,7 @@ V_{j}^{D}(i) &=& \max \left\{
   \end{array} \right.\\
 
 \end{array}
-\end{equation}
+\end{equation*}
 
 In the SMURF or MRFy Markov random field model, we add non-local interactions 
 to these
@@ -251,18 +262,15 @@ in the Markov random field, so only the corresponding terms of the recurrence
 relation need be modified.
 The revised Viterbi recurrence relation for the Markov random field is:
 \begin{small}
-\begin{equation}
-\begin{array}{@{}l@{}c@{}l}
-
-V_{j}^{M}(i) &{}={}& \frac{e_{M_{j}}(x_{i})}{q_{x_{i}}} \times \max \left\{
+\begin{multline}
+V_{j}^{M}(i) = \frac{e_{M_{j}}(x_{i})}{q_{x_{i}}} \times \notag
+\\\notag\\ \max \left\{
   \begin{array}{l@{}c@{}l}
   V_{j-1}^{M}(i - 1) \times a_{M_{j-1}M_{j}} \times P(x_{i}|x_{\pi j})\\
   V_{j-1}^{I}(i - 1) \times a_{I_{j-1}M_{j}} \times P(x_{i}|x_{\pi j})\\
   V_{j-1}^{D}(i - 1) \times a_{D_{j-1}M_{j}} \times P(x_{i}|x_{\pi j})\\
-  \end{array} \right.\\[\goo]
-
-\end{array}
-\end{equation}
+  \end{array} \right.\\
+\end{multline}
 \end{small}
 
 where $x_{\pi j}$ represents the amino acid in column $\pi j$, which is 
@@ -277,38 +285,37 @@ Each probability is transformed into its negative log, resulting in the final
 form:
 
 \begin{small}
-\begin{equation}\label{viterbi-final}
-\begin{array}{l@{}c@{}l@{}}
-V_{j}^{\prime M}(i) &=& e^{\prime}_{M_{j}}(x_{i}) + \min \left\{
+\begin{multline}\label{viterbi-final}
+V_{j}^{\prime M}(i) = e^{\prime}_{M_{j}}(x_{i}) + \notag
+\\\notag\\ \min \left\{
   \begin{array}{l@{}c@{}l}
   \vsum{V_{j-1}^{\prime M}(i-1)} {a^{\prime}_{M_{j-1}M_{j}}} + P'(x_{i}|x_{\pi j})\\
   \vsum{V_{j-1}^{\prime I}(i-1)} {a^{\prime}_{I_{j-1}M_{j}}} + P'(x_{i}|x_{\pi j})\\
   \vsum{V_{j-1}^{\prime D}(i-1)} {a^{\prime}_{D_{j-1}M_{j}}} + P'(x_{i}|x_{\pi j})\\
   \end{array} \right.\\\\
-V_{j}^{\prime I}(i) &=& e^{\prime}_{I_{j}}(x_{i}) + \min \left\{
+V_{j}^{\prime I}(i) = e^{\prime}_{I_{j}}(x_{i}) + \min \left\{
   \begin{array}{l@{}c@{}l}
   \vsum{V_{j}^{\prime M}(i - 1)} {a^{\prime}_{M_{j}I_{j}}}\\
   \vsum{V_{j}^{\prime I}(i - 1)} {a^{\prime}_{I_{j}I_{j}}}\\
   \end{array} \right.\\\\
-V_{j}^{\prime D}(i) &=& \min \left\{
+V_{j}^{\prime D}(i) = \min \left\{
   \begin{array}{l@{}c@{}l}
   \vsum{V_{j-1}^{\prime M}(i)} {a^{\prime}_{M_{j-1}D_{j}}}\\
   \vsum{V_{j-1}^{\prime D}(i)} {a^{\prime}_{D_{j-1}D_{j}}}\\
   \end{array} \right.\\
-\end{array}
-\end{equation}
+\end{multline}
 \end{small}
 
 given the transformations:
 
-\begin{equation}
+\begin{equation*}
   \begin{array}{l@{}c@{}l@{}}
   a'_{s \hat{s}} = - \log a_{s \hat{s}} \\
   e^{\prime}_{s}(x) = - \log\frac{e_{s}(x)}{q_{x}}\\
   V_j^{\prime M}(i) = - \log V_j^{M}(i)\\
   P^{\prime}(x_{i}|x_{\pi j}) = - \log P(x_{i}|x_{\pi j})
   \end{array}\\
-\end{equation}
+\end{equation*}
 
 
 This is exactly the recurrence relation that SMURF~\cite{Menke:2010ti} and 
@@ -334,14 +341,10 @@ score from the $\beta$-strands.
 Since only match states are allowed for $\beta$-strand residues, the 
 contribution of each such residue is only:
 
-\begin{equation}
-% \begin{split}
-  \begin{array}{@{}l@{}c@{}l}
-  V_{j}^{\prime M}(i) = e^{\prime}_{M_{j}}(x_{i}) + 
-  \vsum{V_{j-1}^{\prime M}(i - 1)} {a^{\prime}_{M_{j-1}M_{j}}} + P(x_{i}|x_{\pi j})
-  \end{array}
-% \end{split}
-\end{equation}
+\begin{multline*}
+  V_{j}^{\prime M}(i) = e^{\prime}_{M_{j}}(x_{i}) + \notag\\
+V_{j-1}^{\prime M}(i - 1) + a^{\prime}_{M_{j-1}M_{j}} + P(x_{i}|x_{\pi j})
+\end{multline*}
 
 The asymptotic complexity of the Viterbi algorithm is $O(mn)$, where $m$ is the
 length of the model and $n$ is the length of the query sequence.
@@ -388,85 +391,13 @@ $r_{i}, i \in (1..n)$.
 Let $L = \displaystyle \sum \limits_{i, i <= k} l_{i}$.
 
 There are:
-\begin{equation}
+\begin{equation*}
   \prod_{i \in (1..k)}{n - L - (i \times l_{max})} = 
   (n - 2L - k\times(l_{max}))^{\lceil \frac{k}{2} \rceil}
-\end{equation}
+\end{equation*}
 possible placements of $R$ onto $(N,B)$.
 Asymptotically, as $n$ grows, this is dominated by $n^k$, leading to an
 asymptotic complexity of $O(n^k)$.
-
-% \subsection{Proof that the model is exponential in complexity}\label{mrfy-proof}
-% 
-% Here, we prove that there are an exponential number of possible $\beta$-strand
-% placements that must be considered.
-% 
-% \newdef{definition}{Definition}
-% \begin{definition}
-% Let a Markov random field model $(N,B)$ be defined as a sequence $N$ of nodes 
-% $n_{i}, i \in (1..m)$, and a sequence $B$ of $\beta$-strands 
-% $b_{i}, i \in (1..k)$.
-% Each $\beta$-strand has length $l_{i}$, and contains a subsequence of the nodes
-% $N$.
-% Each $\beta$-strand contains an ordered sequence of nodes, determined by the
-% specifics of the model, which can be referred to as $b_{ij}, i \in (1..m), j \in
-% (1..l_{i})$
-% Let a query sequence be defined as a sequence $R$ of residues
-% $r_{i}, i \in (1..n)$.
-% \end{definition}
-% 
-% \newtheorem{theorem}{Theorem}
-% \begin{theorem}
-% Given a model $(N,B)$ and a query sequence $R$, 
-% $\displaystyle \sum \limits_{i, i <= k} l_{i}$ residues are placed in 
-% $\beta$-strands.
-% \end{theorem}
-% 
-% \begin{proof}
-% Because each $\beta$-strand $b_{i}$ must be populated by exactly $l_{i}$ 
-% residues,
-% $\forall j, j > 1$, $b_{ij}$ is uniquely determined by the sequence $R$.
-% For each $\beta$-strand position $b_{ij}$, one residue is placed.
-% Thus, $\displaystyle \sum \limits_{i, i<=k} l_{i}$ residues are placed in 
-% $\beta$-strands.
-% \end{proof}
-% 
-% 
-% \begin{definition}
-%   Let $L = \displaystyle \sum \limits_{i, i <= k} l_{i}$.
-% \end{definition}
-% 
-% 
-% \begin{theorem}
-% For a Markov random field $(N,B)$ with $k$ $\beta$-strands $b_{i}$, each of 
-% length $l_{i}$, and thus containing positions for residues $b_{ij}$ and a query 
-% sequence $r{i}$ of length $n$, there are $O(n^{k})$ ways
-% to assign residues to the $\beta$-strands.
-% \end{theorem}
-% 
-% 
-% \begin{proof}
-% Given that $L$ residues must be placed on $\beta$-strands, out of $n$ residues
-% in the query sequence $R$, we can represent the problem as one of choosing
-% an index $i \in (1..n)$ for the first position $b_{i1}$ of each $\beta$-strand.
-% Since each $\beta$-strand $b_{i}$ consumes $l_{i}$ residues, this choice
-% for the first $\beta$-strand, $b_{11}$, leaves $n - L - l_{i}$ possible 
-% placements for $b_{21}$.
-% In practice, $\beta$-strands range from two to twelve residues, so without loss 
-% of generality, and to simplify counting, assume each $l_{i}$ is simply a
-% maximum length $l_{max}$.
-% Then choosing an index to place on $b_{i1}$, in general, leaves $n - L - 
-% (i \times l_{max})$ choices for $b_{(i+1)1}$.
-% Thus, there are:
-% \begin{equation}
-%   \prod_{i \in (1..k)}{n - L - (i \times l_{max})} = 
-%   (n - 2L - k\times(l_{max}))^{\lceil \frac{k}{2} \rceil}
-% \end{equation}
-% possible placements of $R$ onto $(N,B)$.
-% Asymptotically, as $n$ grows, this is dominated by $n^k$, leading to an
-% asymptotic complexity of $O(n^k)$.
-% \qed
-% \end{proof}
 
 A typical Markov random field might have 10 or 20 $\beta$-strands, and a typical
 protein query sequence might have between 300 and 600 residues.
@@ -480,19 +411,9 @@ Since an exhaustive search for an optimal alignment of a protein sequence to a
 Markov random field is exponential in complexity, we turn to stochastic search
 to mitigate this complexity.
 
-Stochastic search encompasses a family of approaches for finding optimal or
-near-optimal solutions to optimization problems.
-Stochastic search approaches are promising when a search space is large, so that
-exhaustive search is prohibitive, and when an optimization problem does not lend
-itself to analytic solutions.
-The generic form of stochastic search is that a solution is guessed at and 
-evaluated, and then subsequent guesses are made as refinements to this initial
-guess, until some termination condition is met.
-The function used for evaluation is called the \emph{objective function}.
-
 Framed as an optimization problem, MRFy, like SMURF, seeks to minimize the 
 augmented Viterbi
-score (see Equation~\ref{viterbi-final}), which equates to maximizing 
+score, which equates to maximizing 
 probability (recall that this score is the negative log of a probability).
 SMURF~\cite{Menke:2010ti} finds this minimum exactly, using multi-dimensional dynamic programming,
 which is exponential in the interleave number of beta strands.
@@ -501,13 +422,20 @@ MRFy, in contrast, uses stochastic search, as described next.
 Given a placement of query-sequence residues into $\beta$-strand nodes of the
 Markov random field, the score can be computed exactly.
 Thus, the search space is the set of all possible ways to place residues on
-these nodes..
+these nodes.
+MRFy, as a package, implements many different stochastic search strategies for
+finding the optimal alignment of a query sequence to the Markov random field.
+A particular MRFy strategy involves specifying three different criteria:
+first, how the initial guess is generated (four options), second, how the
+stochastic search proceeds (we include a simulated annealing, genetic algorithm,
+and local search option), and finally, when to terminate and output the search
+and output the best alignment seen thus far (three options).
+
 Many stochastic search techniques rely on a gradient ascent (or descent)
 approach, which makes moves (or refines guesses) along the steepest gradient,
 leading quickly to local optima; various heuristics such as simulated 
 annealing~\cite{Kirkpatrick:1983wa} can then help avoid getting stuck in poor
 local optima.
-
 
 However, we know of no way to compute a gradient on the search space of
 $\beta$-strand placements, and so we must take approaches that do not rely
@@ -537,75 +465,69 @@ of ``sliding'' these $\beta$-strands along the query sequence.
 We will use this analogy in the following description of initial guesses.
 
 We explored four models for generating initial guesses for our search
-techniques:
+techniques.
+A \emph{random-placement} model uniformly positions 
+the $\beta$-strands
+along the query sequence, under the constraint that only legal placements
+may be generated, and thus the placement of any $\beta$-strand must leave 
+room for all the other $\beta$-strands in the model.
 
-\begin{itemize}
-  \item \emph{Random-placement model}.
-  First, we implemented a model that uniformly positions the $\beta$-strands
-  along the query sequence, under the constraint that only legal placements
-  may be generated, and thus the placement of any $\beta$-strand must leave 
-  room for all the other $\beta$-strands in the model.
+A \emph{secondary-structure} prediction model uses the 
+PSIPRED~\cite{McGuffin:2000wx} 
+secondary-structure
+prediction program to determine the positions of $\beta$-strands.
+Given a PSIPRED prediction for the secondary structure of a query sequence,
+we place $\beta$-strands at the most likely locations according to this
+prediction profile, randomized by a small amount of noise.
+% The difficulty with this approach is that, while PSIPRED is reasonably 
+% accurate when it is allowed to perform PSI-BLAST\cite{Altschul:1997tl} 
+% queries to build a sequence
+% profile, this comes at a run-time cost that completely dominates the running
+% time of MRFy.
+% However, while non-profile-based PSIPRED predictions are computationally 
+% cheap, they provide poor accuracy.
   
-  \item \emph{Placement based on secondary structure prediction}.
-  Next, we implemented a model that uses the PSIPRED~\cite{McGuffin:2000wx} secondary-structure
-  prediction program to determine the positions of $\beta$-strands.
-  Given a PSIPRED prediction for the secondary structure of a query sequence,
-  we place $\beta$-strands at the most likely locations according to this
-  prediction profile, randomized by a small amount of noise.
-  The difficulty with this approach is that, while PSIPRED is reasonably 
-  accurate when it is allowed to perform PSI-BLAST\cite{Altschul:1997tl} 
-  queries to build a sequence
-  profile, this comes at a run-time cost that completely dominates the running
-  time of MRFy.
-  However, while non-profile-based PSIPRED predictions are computationally 
-  cheap, they provide poor accuracy.
+A \emph{template-based model} is based on the observation 
+that true homologs
+to a structurally-derived template should have their $\beta$-strands in very
+roughly similar places, in sequence, to the proteins that made up that
+template.
+This will not always hold, but appears to provide for reasonable initial
+guesses.
+Given the position of each $\beta$-strand within a template Markov random 
+field, we scale the query sequence linearly (as it may be shorter or longer 
+than the model) and place the $\beta$-strands in scaled positions.
+Note that we do not scale the $\beta$-strands themselves; their lengths are
+preserved.
+We scale only the distances between $\beta$-strands.
+We inject a small amount of noise into the placements, so that 
+population-based models, such as multi-start simulated annealing and genetic
+algorithms, start with heterogenous solutions.
   
-  \item \emph{Placement based on scaling the template}.
-  Third, we implemented a model based on the observation that true homologs
-  to a structurally-derived template should have their $\beta$-strands in very
-  roughly similar places, in sequence, to the proteins that made up that
-  template.
-  This will not always hold, but appears to provide for reasonable initial
-  guesses.
-  Given the position of each $\beta$-strand within a template Markov random 
-  field, we scale the query sequence linearly (as it may be shorter or longer 
-  than the model) and place the $\beta$-strands in scaled positions.
-  Note that we do not scale the $\beta$-strands themselves; their lengths are
-  preserved.
-  We scale only the distances between $\beta$-strands.
-  We inject a small amount of noise into the placements, so that 
-  population-based models, such as multi-start simulated annealing and genetic
-  algorithms, start with heterogenous solutions.
-  
-  \item \emph{Placement based on SMURFLite alignment}.
-  Finally, we implemented a model that attempts to unify the SMURFLite and
-  MRFy approaches.
-  Given a template $T$, we create a new template, $T^\prime$, exactly as in
-  \citet{Daniels:2012dg}, from which we have removed any $\beta$-strand pairs
-  that exceed an interleave threshold of 2.
-  We then run SMURFLite on $T^\prime$, to create an alignment $a^\prime$.
-  Note that $a^\prime$ is an optimal solution to the template $T^\prime$.
-  We wish to use $a^\prime$ as an initial guess for MRFy, but we must first add
-  in the $\beta$-strands that were removed.
-  In order to do so, we greedily move the placement of each $\beta$-strand in
-  $a^\prime$ as needed to make room for those other $\beta$-strands.
-  The resulting alignment $a$ becomes the initial guess for MRFy.
-  
-\end{itemize}
+Finally, we implemented a model that attempts to unify the SMURFLite and
+MRFy approaches.
+Given a template $T$, we create a new template, $T^\prime$, exactly as in
+\citet{Daniels:2012dg}, from which we have removed any $\beta$-strand pairs
+that exceed an interleave threshold of 2.
+We then run SMURFLite on $T^\prime$, to create an alignment $a^\prime$.
+Note that $a^\prime$ is an optimal solution to the template $T^\prime$.
+We wish to use $a^\prime$ as an initial guess for MRFy, but we must first add
+in the $\beta$-strands that were removed.
+In order to do so, we greedily move the placement of each $\beta$-strand in
+$a^\prime$ as needed to make room for those other $\beta$-strands.
+The resulting alignment $a$ becomes the initial guess for MRFy.
+
 
 Since we do not know how to determine when a stochastic search process has found
 a \emph{global} optimum (as opposed to a good local optimum), we must also have
 some termination criterion for the search.
-We implemented three alternative termination criteria:
-
-\begin{itemize}
-  \item A simple generation-counting approach, where the search terminates after
-  a user-specified number of generations
-  \item A time-based approach, where the search terminates after a 
-  user-specified amount of time has elapsed
-  \item A \emph{convergence} model, where the search terminates after the search
-  has failed to improve after a user-specified number of generations
-\end{itemize}
+We implemented three alternative termination criteria. The first is a simple 
+generation-counting approach, where the search terminates after
+a user-specified number of generations.
+The second is a time-based approach, where the search terminates after a 
+user-specified amount of time has elapsed.
+Finally, a \emph{convergence} model terminates after the search
+has failed to improve after a user-specified number of generations.
   
 In practice, these criteria are easily combined, with a convergence approach
 often halting searches early with good results, while the generation- or 
@@ -619,11 +541,10 @@ search: simulated annealing, a genetic algorithm, and a local search strategy.
 
 Simulated annealing~\cite{Kirkpatrick:1983wa} is a heuristic for stochastic search,
 inspired by the physical process of annealing in metals.
-Whereas a simple hill-climbing approach will always move downhill (if the task
-is minimization) or uphill (if the task is maximization), if the search begins
-near to a poor local optimum, the search will terminate at that local optimum.
-Simulated annealing introduces an \emph{acceptance probability function}:
-\begin{equation}
+Whereas a simple hill-climbing approach will always terminate at the first 
+local optimum encountered,
+simulated annealing introduces an \emph{acceptance probability function}:
+\begin{equation*}
   \begin{split}
   P(e,e',T) = \begin{cases}
     1, & \text{ if } e' < e\\
@@ -633,14 +554,14 @@ Simulated annealing introduces an \emph{acceptance probability function}:
      e = E(s) \\
      e' = E(s')\\
   \end{split}
-\end{equation}
+\end{equation*}
 which relies on some energy function $E(s)$ of the current state $s$ and
 a candidate state $s'$, and a temperature function $T$ that tends towards zero
 as the search progresses.
 In our implementation, we used an exponentially-decaying temperature function:
-\begin{equation}
+\begin{equation*}
   T(t) = k^{t}\times T_{0}
-\end{equation}
+\end{equation*}
 given time $t$, initial temperature $T_{0}$, and a constant $k$.
 The motivation for this decaying temperature function is that, as time 
 progresses, the likelihood of being in a \emph{poor} local optimum lessens, and
@@ -649,9 +570,9 @@ thus, the closer to random hill-climbing we would like the search to behave.
 
 Our energy function $E(s)$ is, naturally, the augmented Viterbi score of a
 placement:
-\begin{equation}
+\begin{equation*}
   E(s) = V_{m}^{\prime M}(n)
-\end{equation}
+\end{equation*}
 where $m$ is the final residue in the query sequence and $n$ is the final
 node in the Markov random field, and the $\beta$-strand placements are 
 determined by $s$.
@@ -666,9 +587,8 @@ candidates is chosen.
 
 \subsubsection{Genetic Algorithm}
 
-A genetic algorithm~\cite{Holland:1977hl} is a search heuristic inspired by 
-biological evolution.
-A genetic algorithm relies on the idea of \emph{selection} among a population of
+A genetic algorithm~\cite{Holland:1977hl} relies on the idea of 
+\emph{selection} among a population of
 varied solutions to an optimization problem.
 At each of many generations, the fitter individuals in the population--those
 solutions which exhibit more optimal scores--are allowed to continue into the
@@ -757,9 +677,7 @@ subject to the constraints of that solution space.
 In the context of MRFy, the constraints are the previously-discussed 
 restrictions that $\beta$-strands cannot overlap, and every residue must be
 placed in a $\beta$-strand.
-The motivation for local search is, in a particularly uneven
-fitness landscape, hill climbing will often reach nearby local optima. Thus,
-given a single candidate solution, local search explores the immediate 
+Given a single candidate solution, local search explores the immediate 
 neighborhood in great detail (perhaps, but not necessarily exhaustively).
 When the local search cannot escape a local optimum, then some sort of 
 \emph{non-local} move may be attempted.
@@ -775,36 +693,31 @@ In MRFy's implementation, each step in the search consists of two phases:
 \emph{diversification} (See Figure~\ref{diversification}) and 
 \emph{intensification}.
 The diversification algorithm is as follows:
-\begin{itemize}
-\item Begin with a candidate solution $s$ (a placement), which is just
+Begin with a candidate solution $s$ (a placement), which is just
 an ordered list of integers.
-\item Given $s$, break the list into three sub-lists $s_{0}, s_{1}$, $s_{2}$, 
+Given $s$, break the list into three sub-lists $s_{0}, s_{1}$, $s_{2}$, 
 at randomly-chosen boundaries.
-\item Choose one of the sub-lists $s_{i}$ at random, and mutate it into $k$ 
+Choose one of the sub-lists $s_{i}$ at random, and mutate it into $k$ 
 copies $s_{i1}$ through $s_{ik}$ at random, for some user-defined value of $k$ 
 (we used $k=10$), within
 the constraints imposed by the other sub-lists and the lengths of the 
 $\beta$-strands.
-\item Re-combine each set of lists, $(s_{1j}, s_{2j}, s_{3j})$ into a new 
+Re-combine each set of lists, $(s_{1j}, s_{2j}, s_{3j})$ into a new 
 placement $s^{\prime}_{j}, j \in (1..k)$.
-\item Score each placement $s^{\prime}_{j}$, return the best-scoring of the $k$ new placements as a new solution.
-\end{itemize}
+Score each placement $s^{\prime}_{j}$, return the best-scoring of the $k$ new 
+placements as a new solution.
 
 Once diversification produces a new candidate solution, intensification brings
 it toward a local maximum.
 The intensification algorithm is as follows:
-\begin{itemize}
-\item Begin with a candidate solution $s$.
-\item Repeat until no better-scoring placements are generated.
-\begin{itemize}
-  \item For each element $e \in s$, generate four new placements $s'_{i1}$ 
-  through $s'_{i4}$ by moving $e$ up and down by 1 and two, as long as those 
-  moves do not violate the constraints.
-  \item Score each candidate placement $s'_{ij}$.
-  \item Set $s$ to the best-scoring candidate placement $s'_{ij}$
-\end{itemize}
-\item Return $s$ as a new solution.
-\end{itemize}
+Begin with a candidate solution $s$.
+Until no better-scoring placements are generated, repeat the following steps:
+For each element $e \in s$, generate four new placements $s'_{i1}$ 
+through $s'_{i4}$ by moving $e$ up and down by 1 and two, as long as those 
+moves do not violate the constraints.
+Next, score each candidate placement $s'_{ij}$.
+Finally, set $s$ to the best-scoring candidate placement $s'_{ij}$.
+Upon termination, return $s$ as a new solution.
 
 \begin{figure}[htb!]
 \begin{center}
@@ -870,20 +783,16 @@ implementation, as first proposed by Kumar and
 Cowen~\cite{Kumar:2009tp, Kumar:2010wv}, as we did for SMURFLite
 in~\cite{Daniels:2012dg}.
 We added pairwise mutations based on $\beta$-strand pairings.
-Unlike in \citet{Daniels:2012dg}, 
-here we were not attempting to mitigate
-the loss of information due to simplifying the Markov random field, but rather
-attempting to compensate for sparse training data.
-This was motivated in part by the observation that SMURFLite benefited most
-from simulated evolution when the ``number of effective families'' was low.
 We use the same mutation frequencies as in \citet{Daniels:2012dg}.
-For each artificial sequence, we mutate at a 50\% mutation rate per length of 
-the $\beta$-strands. 
+For each training sequence, we generate 150 new artificial training 
+sequences. 
+For each of these artificial sequences, we mutate at a 50\% mutation rate per 
+length of the $\beta$-strands.
 
 \subsection{Datasets} \label{mrfy-datasets}
 
 From SCOP (\cite{Murzin:1995uh}) version 1.75, we chose the same
-$\beta$-structural superfamiles as \citet{Daniels:2012dg}.
+$\beta$-barrel superfamiles as \citet{Daniels:2012dg}.
 These superfamilies were: ``Nucleic acid-binding proteins'' (50249), 
 ``Translation proteins'' (50447), 
 ``Barwin-like endoglucanases'' (50685), ``Cyclophilin-like'' (50891), ``Sm-like 
@@ -902,10 +811,7 @@ Each family was left out, and a training set was established from the protein
 chains in the remaining families, with duplicate sequences removed. 
 We built an MRF on the training set, both with and without training-data
 augmentation using the same ``simulated evolution'' implementation as 
-\citet{Daniels:2012dg}: we generate 150 new artificial training 
-sequences from each original training sequence. 
-For each artificial sequence, we mutate at a 50\% mutation rate per length of 
-the $\beta$-strands.
+\citet{Daniels:2012dg}.
 We chose protein chains from the left-out family as positive test examples. 
 Negative test examples were protein chains from all other superfamilies in SCOP 
 classes 1, 2, 3 and 4 (including other barrel superfamilies), indicated as 
@@ -943,10 +849,11 @@ variance (a smaller standard deviation) from run to run, they do not approach
 the minimum score of the local search approaches. Multi-start simulated 
 annealing with a population of 10 and a convergence threshold of 200 generations
 averages 29.3 seconds per search, but only achieves a minimum score of 2112, 
-though it converged in all cases.
+in contrast to a global optimum of 1781, a ratio of 0.843, though it converged 
+in all cases.
 
-In contrast, local search, given 30 seconds, achieves a minimum score of 1982, 
-and even in only 10 seconds achieves a minimum score of 1992.
+In contrast, local search, given 30 seconds, achieves a minimum score of 1982 (a ratio of 0.899), 
+and even in only 10 seconds achieves a minimum score of 1992 (a ratio of 0.894).
 However, the global minimum score of 1781, which is achieved by SMURF on the
 8-bladed $\beta$-propeller template, is only reached by MRFy with local search
 two out of ten times, and this result required local search be allowed to run
@@ -1078,9 +985,10 @@ These structures are also more complex than the propellers, even though they
 are also more computationally complex for SMURFLite with an interleave 
 threshold greater than 2. 
 On this superfamily, there is a closer overlap between the minimum score 
-achieved by simulated annealing, at 790, and the range seen by local search;
+achieved by simulated annealing, at 790 (a ratio of 0.701 compared to the 
+global minimum), and the range seen by local search;
 local search with a time limit of 30 seconds achieves a \emph{mean} minimum
-score of 791, though its best was 740.
+score of 791 (a ratio of 0.700), though its best was 740 (a ratio of 0.748).
 
 Notably, when given a time limit of 5 minutes, local search achieved the 
 \emph{global minimum} of 554 (as determined by exhaustive search) ten out of 
@@ -1182,8 +1090,9 @@ For MRFy, the balance between accuracy and computational efficiency is
 determined by the termination conditions, as well as the search technique 
 chosen.
 Because local search so dramatically outperformed simulated annealing and the
-genetic algorithm, we conducted these cross-validation tests only on local 
-search.
+genetic algorithm at obtaining better-scoring alignments, we conducted these 
+cross-validation tests only on local search, using a simple time limit as a
+termination condition.
 We chose 30 seconds as a balance between speed and accuracy; a 5 minute time
 limit might result in better accuracy, but for high-throughput, whole-genome 
 scans, 5 minutes per alignment is excessive.
@@ -1349,7 +1258,8 @@ have been shown to be highly conserved~\cite{Naamati:2009eg, Tirosh:2012iq},
 would appear to fit easily into this model.
 
 \section{Acknowledgements}
-Thanks to Richard Senington for the original local search implementation. 
+Thanks to Richard Senington for the original local search implementation, and
+Sheng Wang for providing access to CNFPred for comparison purposes.
 This work was funded in part by NIH grant 1R01GM080330-01A1 (to L.C.).
 
 

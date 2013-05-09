@@ -3,45 +3,45 @@ The top-level auxiliary file: mrfy.aux
 The style file: abbrv.bst
 Database file #1: mrfy.bib
 Warning--there's a number but no volume in Holland:1977hl
-You've used 20 entries,
+You've used 31 entries,
             2118 wiz_defined-function locations,
-            637 strings with 7288 characters,
-and the built_in function-call counts, 7054 in all, are:
-= -- 692
-> -- 370
+            709 strings with 9205 characters,
+and the built_in function-call counts, 10629 in all, are:
+= -- 1054
+> -- 543
 < -- 1
-+ -- 144
-- -- 124
-* -- 573
-:= -- 1205
-add.period$ -- 61
-call.type$ -- 20
-change.case$ -- 120
++ -- 211
+- -- 180
+* -- 846
+:= -- 1817
+add.period$ -- 94
+call.type$ -- 31
+change.case$ -- 181
 chr.to.int$ -- 0
-cite$ -- 21
-duplicate$ -- 231
-empty$ -- 517
-format.name$ -- 124
-if$ -- 1417
+cite$ -- 32
+duplicate$ -- 349
+empty$ -- 783
+format.name$ -- 180
+if$ -- 2135
 int.to.chr$ -- 0
-int.to.str$ -- 20
-missing$ -- 21
-newline$ -- 103
-num.names$ -- 42
-pop$ -- 103
+int.to.str$ -- 31
+missing$ -- 32
+newline$ -- 158
+num.names$ -- 64
+pop$ -- 148
 preamble$ -- 1
-purify$ -- 101
+purify$ -- 151
 quote$ -- 0
-skip$ -- 149
+skip$ -- 233
 stack$ -- 0
-substring$ -- 473
-swap$ -- 28
+substring$ -- 731
+swap$ -- 39
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 78
+type$ -- 122
 warning$ -- 1
-while$ -- 71
-width$ -- 22
-write$ -- 220
+while$ -- 109
+width$ -- 33
+write$ -- 338
 (There was 1 warning)

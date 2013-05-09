@@ -13,6 +13,11 @@ H.~M. Berman, T.~N. Bhat, P.~E. Bourne, Z.~Feng, G.~Gilliland, H.~Weissig, and
 \newblock {The Protein Data Bank and the challenge of structural genomics.}
 \newblock {\em Nature structural biology}, 7 Suppl:957--959, Nov. 2000.
 
+\bibitem{Cowen:2002p588}
+L.~Cowen, P.~Bradley, M.~Menke, J.~King, and B.~Berger.
+\newblock {Predicting the beta-helix fold from protein sequence data}.
+\newblock {\em Journal of Computational Biology}, 9(2):261--276, 2002.
+
 \bibitem{Daniels:2012cm}
 N.~M. Daniels, A.~Gallant, and N.~Ramsey.
 \newblock {Experience report: Haskell in computational biology}.
@@ -38,6 +43,12 @@ S.~R. Eddy.
 \newblock {Profile hidden Markov models}.
 \newblock {\em Bioinformatics}, 14(9):755--763, Oct. 1998.
 
+\bibitem{Gopalakrishnan:2009wx}
+V.~Gopalakrishnan and P.~Weigele.
+\newblock {Conditional graphical models for protein structural motif
+  recognition}.
+\newblock {\em Journal of Computational Biology}, 2009.
+
 \bibitem{Hentenryck:2009vn}
 P.~V. Hentenryck and L.~Michel.
 \newblock {\em {Constraint-based local search}}.
@@ -47,6 +58,13 @@ P.~V. Hentenryck and L.~Michel.
 J.~H. Holland and J.~S. Reitman.
 \newblock {Cognitive systems based on adaptive algorithms}.
 \newblock {\em ACM SIGART Bulletin}, (63):49, June 1977.
+
+\bibitem{Hughey:1996ub}
+R.~Hughey and A.~Krogh.
+\newblock {Hidden Markov models for sequence analysis: extension and analysis
+  of the basic method.}
+\newblock {\em Computer applications in the biosciences : CABIOS},
+  12(2):95--107, Apr. 1996.
 
 \bibitem{Kirkpatrick:1983wa}
 S.~Kirkpatrick and M.~P. Vecchi.
@@ -64,6 +82,18 @@ A.~Kumar and L.~Cowen.
 \newblock {Recognition of beta-structural motifs using hidden Markov models
   trained with simulated evolution}.
 \newblock {\em Bioinformatics}, 26(ISMB 2010):i287--i293, 2010.
+
+\bibitem{Lathrop:1996gm}
+R.~H. Lathrop and T.~F. Smith.
+\newblock {Global optimum protein threading with gapped alignment and empirical
+  pair score functions.}
+\newblock {\em Journal of Molecular Biology}, 255(4):641--665, Feb. 1996.
+
+\bibitem{Lifson:1980vd}
+S.~Lifson and C.~Sander.
+\newblock {Specific recognition in the tertiary structure of [beta]-sheets of
+  proteins}.
+\newblock {\em Journal of Molecular Biology}, 139:627--629, 1980.
 
 \bibitem{Loh:2012br}
 P.-R. Loh, M.~Baym, and B.~Berger.
@@ -93,6 +123,17 @@ G.~Naamati, M.~Askenazi, and M.~Linial.
 \newblock {\em Nucleic Acids Research}, 37(Web Server issue):W363--8, July
   2009.
 
+\bibitem{Olmea:1999ug}
+O.~Olmea, B.~Rost, and A.~Valencia.
+\newblock {Effective use of sequence correlation and conservation in fold
+  recognition}.
+\newblock {\em Journal of Molecular Biology}, 293(5):1221--1239, 1999.
+
+\bibitem{Peng:2011vk}
+J.~Peng and J.~Xu.
+\newblock {A multiple‐template approach to protein threading}.
+\newblock {\em Proteins: Structure, Function, and Bioinformatics}, 2011.
+
 \bibitem{Soding:2005ff}
 J.~S{\"o}ding.
 \newblock {Protein homology detection by HMM-HMM comparison}.
@@ -104,16 +145,41 @@ P.~Sonego, A.~Kocsor, and S.~Pongor.
   sequences and 3D structures.}
 \newblock {\em Briefings in bioinformatics}, 9(3):198--209, May 2008.
 
+\bibitem{Steward:2002wz}
+R.~E. Steward and J.~M. Thorton.
+\newblock {Prediction of strand pairing in antiparallel and parallel β-sheets
+  using information theory}.
+\newblock {\em Proteins: Structure, Function, and Bioinformatics}, 48:178--191,
+  2002.
+
+\bibitem{Thomas:2008uw}
+J.~Thomas, N.~Ramakrishnan, and C.~Bailey-Kellogg.
+\newblock {Graphical models of residue coupling in protein families}.
+\newblock {\em IEEE/ACM transactions on computational biology and
+  bioinformatics / IEEE, ACM}, 2008.
+
 \bibitem{Tirosh:2012iq}
 Y.~Tirosh, N.~Morpurgo, M.~Cohen, M.~Linial, and G.~Bloch.
 \newblock {Raalin, a transcript enriched in the honey bee brain, is a remnant
   of genomic rearrangement in \emph{Hymenoptera}.}
 \newblock {\em Insect molecular biology}, 21(3):305--318, June 2012.
 
+\bibitem{White:1994ty}
+J.~V. White, I.~Muchnik, and T.~F. Smith.
+\newblock {Modeling protein cores with Markov random fields.}
+\newblock {\em Mathematical biosciences}, 124(2):149--179, Dec. 1994.
+
 \bibitem{Xu:2003p3417}
 J.~Xu, M.~Li, D.~Kim, and Y.~Xu.
 \newblock {Raptor: Optimal Protein Threading By Linear Programming}.
 \newblock {\em Journal of Bioinformatics and Computational Biology},
   1(1):95--117, 2003.
+
+\bibitem{Zhu:1999wr}
+H.~Zhu and W.~Braun.
+\newblock {Sequence specificity, statistical potentials, and three-dimensional
+  structure prediction with self-correcting distance geometry calculations of
+  beta-sheet formation in proteins.}
+\newblock {\em Protein Science}, 8(2):326--342, 1999.
 
 \end{thebibliography}
