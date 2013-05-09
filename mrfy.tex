@@ -35,11 +35,11 @@
       \fi}
 
 
-\topmargin 0.0cm
-\oddsidemargin 0.2cm
-\textwidth 16cm 
-\textheight 21cm
-\footskip 1.0cm
+%\topmargin 0.0cm
+%\oddsidemargin 0.2cm
+%\textwidth 16cm 
+%\textheight 21cm
+%\footskip 1.0cm
 
 \begin{document}
 
@@ -125,14 +125,13 @@ dynamic program.
 
 
 This computational cost was the barrier that prevented the SMURF MRF
-from being applied directly to other $\beta$-structures, beyond just
-the propellers.  
+from being applied beyond propellers to other $\beta$-structures.
 When run on $\beta$-barrels, or other $\beta$-structures with
 even moderately complex strand interleaving patterns, the exact
-computation of the SMURF MRF became completely intractable. 
-There are two ways to mitigate this computational bottleneck. 
+computation of the SMURF MRF becomes intractable. 
+There are two ways to mitigate the computational bottleneck. 
 One approach is to simplify the random field, and only consider some of the 
-pairwise statistical preferences for the $\beta$-strands that are more local in 
+pairwise statistical preferences for the $\beta$-strands, namely those that are more local in 
 sequence.
 This is the methodology we introduced in a 2012 paper of Daniels, Hosur, Berger
 and Cowen, when we designed SMURFLite~\cite{Daniels:2012dg}. 
@@ -204,21 +203,16 @@ Figure~\ref{mrfy_model} illustrates this architecture.
 The standard form of the Viterbi
 recurrence relations for computing the most likely path of a sequence through
 a hidden Markov model, as incorporated in HMMER~\cite{Eddy:1998ut} is:
-
 \newcommand\txprobj[3][]{a#1_{{#2}_{j-1}{#3}_j}}
 \newcommand\txprobjj[3][]{a#1_{{#2}_{j-1}{#3}_j}}
 \newcommand\alignwidth{\ensuremath C} % number of columns in an alignment
 \newcommand\pairedwith[1]{{\pi(#1)}}
-
 \newcommand\vsum[2]{#2&{}+{}& #1}
-
 \def\goo{18pt}
 \def\gum{14pt}
-
 \def\maxiquad{\hskip 1.2em\relax}
 \begin{equation*}
 \begin{array}{@{}l@{}c@{}l}
-
 V_{j}^{M}(i) &{}={}& \frac{e_{M_{j}}(x_{i})}{q_{x_{i}}} \times \max \left\{
   \begin{array}{l@{}c@{}l}
   V_{j-1}^{M}(i - 1) \times a_{M_{j-1}M_{j}}\\
@@ -235,7 +229,6 @@ V_{j}^{D}(i) &=& \max \left\{
   V_{j-1}^{M}(i) \times a_{M_{j-1}D_{j}}\\
   V_{j-1}^{D}(i) \times a_{D_{j-1}D_{j}}\\
   \end{array} \right.\\
-
 \end{array}
 \end{equation*}
 
@@ -272,18 +265,16 @@ V_{j}^{M}(i) = \frac{e_{M_{j}}(x_{i})}{q_{x_{i}}} \times \notag
   \end{array} \right.\\
 \end{multline}
 \end{small}
-
 where $x_{\pi j}$ represents the amino acid in column $\pi j$, which is 
-hydrogen-bonded to the amino acid $x_{i}$ in column $j$.
-
-For reasons of convenience, as well as avoiding floating-point underflow due to
-exceedingly small numbers, we typically work in negative log space.
-Since a probability can range from 0 to 1, the log of a probability must be a
-negative number, and thus the negative log of that probability is a (small)
-positive number.
-Each probability is transformed into its negative log, resulting in the final
-form:
-
+hydrogen-bonded to the amino acid $x_{i}$ in column $j$. Then, transforming
+to negative logspace, we actually solve: 
+%For reasons of convenience, as well as avoiding floating-point underflow due to
+%exceedingly small numbers, we typically work in negative log space.
+%Since a probability can range from 0 to 1, the log of a probability must be a
+%negative number, and thus the negative log of that probability is a (small)
+%positive number.
+%Each probability is transformed into its negative log, resulting in the final
+%form:
 \begin{small}
 \begin{multline}\label{viterbi-final}
 V_{j}^{\prime M}(i) = e^{\prime}_{M_{j}}(x_{i}) + \notag
@@ -305,9 +296,7 @@ V_{j}^{\prime D}(i) = \min \left\{
   \end{array} \right.\\
 \end{multline}
 \end{small}
-
 given the transformations:
-
 \begin{equation*}
   \begin{array}{l@{}c@{}l@{}}
   a'_{s \hat{s}} = - \log a_{s \hat{s}} \\
@@ -316,8 +305,6 @@ given the transformations:
   P^{\prime}(x_{i}|x_{\pi j}) = - \log P(x_{i}|x_{\pi j})
   \end{array}\\
 \end{equation*}
-
-
 This is exactly the recurrence relation that SMURF~\cite{Menke:2010ti} and 
 SMURFLite~\cite{Daniels:2012dg} solve using multidimensional dynamic 
 programming.
@@ -326,26 +313,24 @@ As demonstrated by Daniels, et al.~\cite{Daniels:2012dg}, as the
 of the $\beta$-strands increases, the computational complexity grows 
 exponentially.
 
-As an alternative to solving these more complex recurrence relations, we might
-consider a divide-and-conquer approach.
-Each $\beta$-strand can be thought of as breaking the larger model into two 
-smaller
-models; collectively, all the $\beta$-strands divide the Markov random field 
-into many small, \emph{independent} hidden Markov models.
-Thus, for any particular path through the Markov random field, corresponding to
-a particular placement of query sequence residues onto the nodes of the model,
-we could compute the augmented Viterbi score by summing the Viterbi scores of
-each smaller hidden Markov model, along with the contribution to the Viterbi
-score from the $\beta$-strands.
+As an alternative to exactly solving these more complex recurrence
+relations, we might consider a divide-and-conquer approach.  Each
+$\beta$-strand can be thought of as breaking the larger model into two
+smaller models; collectively, all the $\beta$-strands divide the
+Markov random field into many small, \emph{independent} hidden Markov
+models.  Thus, for any particular path through the Markov random
+field, corresponding to a particular placement of query sequence
+residues onto the nodes of the model, we could compute the augmented
+Viterbi score by summing the Viterbi scores of each smaller hidden
+Markov model, along with the contribution to the Viterbi score from
+the $\beta$-strands.
 
 Since only match states are allowed for $\beta$-strand residues, the 
 contribution of each such residue is only:
-
 \begin{multline*}
   V_{j}^{\prime M}(i) = e^{\prime}_{M_{j}}(x_{i}) + \notag\\
 V_{j-1}^{\prime M}(i - 1) + a^{\prime}_{M_{j-1}M_{j}} + P(x_{i}|x_{\pi j})
 \end{multline*}
-
 The asymptotic complexity of the Viterbi algorithm is $O(mn)$, where $m$ is the
 length of the model and $n$ is the length of the query sequence.
 Furthermore, the asymptotic complexity of the beta-strand contribution to the
@@ -429,40 +414,40 @@ A particular MRFy strategy involves specifying three different criteria:
 first, how the initial guess is generated (four options), second, how the
 stochastic search proceeds (we include a simulated annealing, genetic algorithm,
 and local search option), and finally, when to terminate and output the search
-and output the best alignment seen thus far (three options).
+and output the best alignment seen thus far (three options). We first describe the intial guess options, then the termination options, and finally the options for stochastic search implemented in MRFy. 
 
-Many stochastic search techniques rely on a gradient ascent (or descent)
-approach, which makes moves (or refines guesses) along the steepest gradient,
-leading quickly to local optima; various heuristics such as simulated 
-annealing~\cite{Kirkpatrick:1983wa} can then help avoid getting stuck in poor
-local optima.
+%Many stochastic search techniques rely on a gradient ascent (or descent)
+%approach, which makes moves (or refines guesses) along the steepest gradient,
+%leading quickly to local optima; various heuristics such as simulated 
+%annealing~\cite{Kirkpatrick:1983wa} can then help avoid getting stuck in poor
+%local optima.
 
-However, we know of no way to compute a gradient on the search space of
-$\beta$-strand placements, and so we must take approaches that do not rely
-on this gradient.
-Instead, we must rely on a random-mutation model of search, which generates one
-or more candidate solutions (guesses) from a previous solution, and then
-evaluates the cost function (in our case, the augmented Viterbi score) to
-determine whether those guesses are better or worse than the previous step.
-This can be likened to climbing a hill in the dark, feeling one's way with one 
-foot before committing to a step.
-This approach is referred to as \emph{random-mutation hill
- climbing}\cite{Davis:1991vx}.
+%However, we know of no way to compute a gradient on the search space of
+%$\beta$-strand placements, and so we must take approaches that do not rely
+%on this gradient.
+%Instead, we must rely on a random-mutation model of search, which generates one
+%or more candidate solutions (guesses) from a previous solution, and then
+%nevaluates the cost function (in our case, the augmented Viterbi score) to
+%determine whether those guesses are better or worse than the previous step.
+%This can be likened to climbing a hill in the dark, feeling one's way with one 
+%foot before committing to a step.
+%This approach is referred to as \emph{random-mutation hill
+% climbing}\cite{Davis:1991vx}.
 
 
-In our representation, a particular solution is represented by an ordered list
-of integers, one integer per $\beta$-strand in the Markov random field.
-The value of each integer indicates the index, in the query sequence, of the
-residue assigned to the first position of that $\beta$-strand.
-Since the alignments to the regions of the Markov random field are solved
-exactly by the Viterbi algorithm, this ordered list of integers uniquely
-represents a solution to a Markov random field.
+%In our representation, a particular solution is represented by an ordered list
+%of integers, one integer per $\beta$-strand in the Markov random field.
+%The value of each integer indicates the index, in the query sequence, of the
+%residue assigned to the first position of that $\beta$-strand.
+%Since the alignments to the regions of the Markov random field are solved
+%exactly by the Viterbi algorithm, this ordered list of integers uniquely
+%represents a solution to a Markov random field.
 
-While the picture we have presented for our Markov random field model is most
-precisely explained by assigning residue indices to the positions of 
-$\beta$-strands, it may be more intuitive to consider the equivalent problem
-of ``sliding'' these $\beta$-strands along the query sequence.
-We will use this analogy in the following description of initial guesses.
+%While the picture we have presented for our Markov random field model is most
+%precisely explained by assigning residue indices to the positions of 
+%$\beta$-strands, it may be more intuitive to consider the equivalent problem
+%of ``sliding'' these $\beta$-strands along the query sequence.
+%We will use this analogy in the following description of initial guesses.
 
 We explored four models for generating initial guesses for our search
 techniques.
