@@ -5,43 +5,43 @@ Database file #1: mrfy.bib
 Warning--there's a number but no volume in Holland:1977hl
 You've used 31 entries,
             2118 wiz_defined-function locations,
-            709 strings with 9205 characters,
-and the built_in function-call counts, 10629 in all, are:
-= -- 1054
-> -- 543
-< -- 1
-+ -- 211
-- -- 180
-* -- 846
-:= -- 1817
+            705 strings with 9125 characters,
+and the built_in function-call counts, 10457 in all, are:
+= -- 1035
+> -- 535
+< -- 0
++ -- 209
+- -- 178
+* -- 841
+:= -- 1797
 add.period$ -- 94
 call.type$ -- 31
 change.case$ -- 181
 chr.to.int$ -- 0
 cite$ -- 32
-duplicate$ -- 349
-empty$ -- 783
-format.name$ -- 180
-if$ -- 2135
+duplicate$ -- 339
+empty$ -- 769
+format.name$ -- 178
+if$ -- 2089
 int.to.chr$ -- 0
 int.to.str$ -- 31
 missing$ -- 32
 newline$ -- 158
-num.names$ -- 64
-pop$ -- 148
+num.names$ -- 62
+pop$ -- 143
 preamble$ -- 1
 purify$ -- 151
 quote$ -- 0
-skip$ -- 233
+skip$ -- 224
 stack$ -- 0
-substring$ -- 731
-swap$ -- 39
-text.length$ -- 1
+substring$ -- 716
+swap$ -- 32
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 122
 warning$ -- 1
-while$ -- 109
+while$ -- 106
 width$ -- 33
-write$ -- 338
+write$ -- 337
 (There was 1 warning)

@@ -31,13 +31,6 @@ N.~M. Daniels, R.~Hosur, B.~Berger, and L.~J. Cowen.
   into the twilight zone.}
 \newblock {\em Bioinformatics}, 28(9):1216--1222, May 2012.
 
-\bibitem{Davis:1991vx}
-L.~Davis.
-\newblock {Bit-climbing, representational bias, and test suite design}.
-\newblock In R.~K. Belew and L.~B. Booker, editors, {\em Proceedings of the
-  Fourth International Conference on Genetic Algorithms}, pages 18--23, San
-  Mateo, CA, 1991.
-
 \bibitem{Eddy:1998ut}
 S.~R. Eddy.
 \newblock {Profile hidden Markov models}.
@@ -65,6 +58,11 @@ R.~Hughey and A.~Krogh.
   of the basic method.}
 \newblock {\em Computer applications in the biosciences : CABIOS},
   12(2):95--107, Apr. 1996.
+
+\bibitem{JianzhuMa:2012cp}
+J.~P. S. W. J.~X. Jianzhu~Ma.
+\newblock {A conditional neural fields model for protein threading}.
+\newblock {\em Bioinformatics}, 28(12):i59, June 2012.
 
 \bibitem{Kirkpatrick:1983wa}
 S.~Kirkpatrick and M.~P. Vecchi.

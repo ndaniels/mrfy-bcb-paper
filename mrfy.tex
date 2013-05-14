@@ -62,6 +62,16 @@ Medford, MA 02155.}
 
 \begin{abstract}
 
+We introduce MRFy, a tool for protein remote homology detection that captures
+beta-strand dependencies in the Markov random field.
+On a diverse set of SCOP beta-structural superfamilies, MRFy shows a mean 20\%
+improvement in Area Under the Curve as compared to HMMER, 34\% improvement as
+compared to RAPTOR, 17\% improvement as compared to HHPred, and a 32\% 
+improvement as compared to CNFPred.
+MRFy was implemented in the Haskell functional programming language, and
+parallelizes well on multi-core systems.
+MRFy is available, as source code as well as an executable, from
+\url{http://mrfy.cs.tufts.edu/}.
 
 \end{abstract} 
 
@@ -82,7 +92,7 @@ functions of unknown proteins.
 Recognition of remote homologs from protein sequence is a challenging problem,
 however, particularly for $\beta$-structural motifs, where many of the
 residues whose interactions drive the fold can be a variable, and sometimes
-long, distance apart in sequence. 
+long, distance apart in sequence~\cite{Menke:2010ti}. 
 Many of the popular
 sequence-based methods for recognizing close homologs, such as Profile
 Hidden Markov Models (HMMs)~\cite{Eddy:1998ut,Hughey:1996ub}, perform 
@@ -145,7 +155,8 @@ In particular, we introduce MRFy, a suite of methods to perform
 stochastic searches of the SMURF MRF. 
 We show that MRFy, combined with Kumar and Cowen's 
 {\em simulated evolution\/}~\cite{Kumar:2009tp, Kumar:2010wv}
-outperforms HMMer (a popular HMM method), RaptorX (a state-of the art threading 
+outperforms HMMer (a popular HMM method), Raptor (a popular threading method), 
+CNFPred (a state-of the art threading 
 method), and HHPred (a profile-profile HMM method that has performed well at 
 recent CASP competitions) at recognizing different $\beta$-barrel superfamilies
 in a stringent leave-family-out cross validation experiment. 
@@ -157,15 +168,16 @@ Finally, we find the best approach is a hybrid combination of
 SMURFLite and MRFy: we initialize the MRFy stochastic search from the
 best sequence parse that SMURFLite can find, and then run the
 stochastic search from there. On the same set of $\beta$-barrel superfamilies 
-considered in \cite{Daniels:2012dg}, we show a mean XX\% (median YY\%) 
+considered in \cite{Daniels:2012dg}, we show a mean 3.5\% (median 2.2\%) 
 improvement in Area Under Curve (AUC) for
 $\beta$-structural motif recognition as compared to the SMURFLite results 
 in~\cite{Daniels:2012dg}.
-By these same benchmarks, we show a mean 5.5\% (median 16\%) improvement over
-HMMER (\cite{Eddy:1998ut}) (a popular HMM method), a mean 29\% (median
-16\%) improvement as compared to RAPTOR (\cite{Xu:2003p3417}) (a
-well-known threading method), and a mean 13\% (median 14\%) improvement in AUC 
-over HHPred (\cite{Soding:2005ff}) (a profile-profile HMM method).
+By these same benchmarks, we show a mean 20\% (median 10\%) improvement over
+HMMER (\cite{Eddy:1998ut}), a mean 34\% (median
+23\%) improvement as compared to RAPTOR (\cite{Xu:2003p3417}),
+a mean 32\% (median 19\%) improvement over CNFPred~\cite{JianzhuMa:2012cp},
+and a mean 17\% (median 21\%) improvement in AUC 
+over HHPred (\cite{Soding:2005ff}).
 
 
 
@@ -707,7 +719,12 @@ Upon termination, return $s$ as a new solution.
 \begin{figure}[htb!]
 \begin{center}
   \fbox{\includegraphics[width=2.8in]{localsearch.pdf}}
-   \caption{The diversification step in local search.}
+   \caption[The diversification step in local search.]
+   {The diversification step in local search.
+   In this example, $\beta$-strand placements in the middle of the query
+   sequence, corresponding to residue positions 24, 31, and 47, are varied
+   to explore a diverse areas of the search space from a locally optimum 
+   solution.}
    \label{diversification}
  \end{center}
 \end{figure}
@@ -868,8 +885,9 @@ ten runs, and with a time limit of 5 minutes, in four out of ten runs.
 \rowcolors{2}{gray!25}{white}
 
 \begin{small}
-\begin{center}
+% \begin{center}
 \begin{table*}[htb]
+\centering
 \caption{Stochastic search performance on 8-bladed $\beta$-propeller \label{ss-propeller}}
 \begin{tabular}{lllll}
 \hline
@@ -910,14 +928,18 @@ For Local Search, we show results for time limits of 10 seconds, 30 seconds and
 five minutes, on a 12-core AMD Opteron.
 MRFy never achieved the global optimum score of 1781, achieved by SMURF, on this
 template, except when local search was given 20 minutes of compute time, in
-which case it found the global optimum two out of ten times.}
+which case it found the global optimum two out of ten times.
+These results show that local search outperforms the other search strategies,
+and presents the tradeoff between the running time and accuracy of stochastic 
+search.}
 \end{table*}
-\end{center}
+% \end{center}
 \end{small}
 
 \begin{small}
-\begin{center}
+% \begin{center}
 \begin{table*}[htb]
+  \centering
 \caption{Stochastic search performance on ``Barwin-like'' $\beta$-barrel \label{ss-barwin}}
 \begin{tabular}{llllll}
 \hline
@@ -958,9 +980,12 @@ For the Genetic Algorithm, we show results for convergence thresholds of 10,
 For Local Search, we show results for time limits of 10 seconds, 30 seconds and 
 five minutes, on a 12-core AMD Opteron.
 The ``Optimal'' column indicates the fraction of runs for each search method
-that achieved the global optimum.}
+that achieved the global optimum.
+These results show that local search outperforms the other search strategies,
+and presents the tradeoff between the running time and accuracy of stochastic 
+search.}
 \end{table*}
-\end{center}
+% \end{center}
 \end{small}
 
 Table~\ref{ss-sandwich} indicates the performance of the stochastic
@@ -981,8 +1006,9 @@ ten times. Local search never found this score when given only 10 seconds or
 30 seconds as a time limit.
 
 \begin{small}
-\begin{center}
+% \begin{center}
 \begin{table*}[!t]
+  \centering
 \caption{Stochastic search performance on $\beta$-sandwich\label{ss-sandwich}}
 \begin{tabular}{llllll}
 \hline
@@ -1024,9 +1050,12 @@ For the Genetic Algorithm, we show results for convergence thresholds of 10,
 For Local Search, we show results for time limits of 10 seconds, 30 seconds and 
 five minutes, on a 12-core AMD Opteron.
 The ``Optimal'' column indicates the fraction of runs for each search method
-that achieved the global optimum.}
+that achieved the global optimum.
+These results show that local search outperforms the other search strategies,
+and presents the tradeoff between the running time and accuracy of stochastic 
+search.}
 \end{table*}
-\end{center}
+% \end{center}
 \end{small}
 
 \rowcolors{2}{white}{white}
@@ -1057,6 +1086,11 @@ speedup rolls off.
 We note that by running 4 instances of MRFy in parallel on different searches,
 we would expect to be able to use all 48 cores with about 50\% efficiency.
 
+Based on our results described above, we decided to have MRFy default to local 
+search, with a time limit of 30 seconds.
+We further explore MRFy's performance with and without simulated evolution,
+and with initial guesses derived from SMURFLite.
+
 \begin{figure}[htb!]
 \begin{center}
   \fbox{\includegraphics[width=2.8in]{speedup.pdf}}
@@ -1069,6 +1103,10 @@ we would expect to be able to use all 48 cores with about 50\% efficiency.
 
 \subsection{Remote homology detection accuracy}
 
+We compared MRFy using local search and a 30-second time limit, against 
+HMMER~\cite{Eddy:1998ut},
+Raptor~\cite{Xu:2003p3417}, HHPred~\cite{Soding:2005ff}, 
+and CNFPred~\cite{JianzhuMa:2012cp}.
 We performed cross-validation testing on 11 $\beta$-barrel superfamilies, both
 with and without simulated evolution.
 For MRFy, the balance between accuracy and computational efficiency is 
@@ -1113,18 +1151,32 @@ We note that the running time required for SMURFLite with an interleave
 threshold of 4 was roughly 10 minutes; MRFy required only 30 seconds to achieve
 comparable results.
 
-MRFy outperforms SMURFLite in terms of AUC on four of the $\beta$-barrel 
+Without using SMURFLite to provide an initial guess, MRFy outperforms SMURFLite 
+in terms of AUC on four of the $\beta$-barrel 
 superfamilies, while SMURFLite outperforms MRFy on three.
-There was only one superfamily, the ``Prokaryotic SH3-related domain,'' where
-SMURFLite outperformed HMMER, RAPTOR, and HHPred while MRFy did not (MRFy, with 
-an AUC of 0.73, fell behind HMMER's 0.81 AUC).
-Unfortunately, MRFy never produced the best performance on a superfamily that 
-SMURFLite had not performed best on in our previous work.
+With SMURFLite initial guesses, MRFy outperformed SMURFLite on all but one
+superfamily.
+In particular, we note improvement on the ``Nucleic acid-binding proteins''
+superfamily; see Figure~\ref{roc-curves} for the results of ROC analysis.
+In general, MRFy improved the performance on the superfamilies on which
+SMURFLite performed well, though it did not improve the performance on those
+superfamilies for which 
+SMURFLite had not performed well in our previous work.
 Thus, with the exception of the ``Barwin-like endoglucanase'' superfamily, the
 added $\beta$-strand information does not seem to help MRFy significantly in 
 the cases where HMMER, RAPTOR, or HHPred performed best.
 
-%%%
+
+\begin{figure}[htb!]
+\begin{center}
+  \fbox{\includegraphics[width=2.8in]{50249-roc.pdf}}
+   \caption{ROC curves and AUC statistic for the 
+   ``Nucleic acid-binding proteins'' superfamily.
+   }
+   \label{roc-curves}
+ \end{center}
+\end{figure}
+
 
 \rowcolors{2}{gray!25}{white}
 
@@ -1137,38 +1189,41 @@ p{#1}}
 \begin{center}
 \begin{table*}[!t]
 \caption{AUC on Beta-Barrel superfamilies\label{mrfy-auc}}
-{\footnotesize \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}H{3.3cm}p{1.0cm}p{1.1cm}p{1.0cm}p{2.4cm}p{0.7cm}p{1.6cm}p{1.6cm}}\hline
- & HMMER & RAPTOR & HHPred & SMURF\-Lite & MRFy$^{1}$ & MRFy$^{1}$, SE & MRFy$^{2}$\\
+{\footnotesize \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}H{3.8cm}p{1.0cm}p{1.1cm}p{1.1cm}p{1.0cm}p{1.6cm}p{0.9cm}p{0.9cm}p{0.9cm}}\hline
+ & HMMER & RAPTOR & HHPred & CNFPred & SMURF\-Lite & MRFy$^{1}$ & MRFy$^{2}$ & MRFy$^{3}$\\
  \hline
-{\bf MRFy performs best}  & & & & & & & \\
+{\bf MRFy performs best}  & & & & & & & & \\
 \hline
-Translation proteins & - & - & 0.66 & 0.93 & {\bf 0.95} & 0.91 & {\bf 0.95}\\
-Barwin-like endoglucanases & - & - & 0.75 & 0.77 & 0.86 & {\bf 0.92} & {\bf 0.94} \\
-Tudor/PWWP/MBT & 0.78 & 0.74 & 0.67 & 0.83 & {\bf 0.86} & {\bf 0.86} & {\bf 0.86}\\
-Nucleic acid-binding proteins & 0.75 & - & 0.67 & 0.89 & 0.75 & {\bf 0.95} & {\bf 0.95} \\
+Translation proteins & - & - & 0.66 & 0.68 & 0.93 & {\bf 0.95} & 0.91 & {\bf 0.95}\\
+Barwin-like endoglucanases & - & - & 0.75 & 0.79 & 0.77 & 0.86 & {\bf 0.92} & {\bf 0.94} \\
+Tudor/PWWP/MBT & 0.78 & 0.74 & 0.67 & 0.83 & 0.83 & {\bf 0.86} & {\bf 0.86} & {\bf 0.86}\\
+Nucleic acid-binding proteins & 0.75 & - & 0.67 & 0.66 & 0.92 & 0.75 & {\bf 0.95} & {\bf 0.95} \\
+ % \hline
+ % {\bf SMURFLite performs best}  & & & & & & & &  \\
+% \hline
+Cyclophilin-like & 0.67 & 0.61 & 0.7 & 0.68 & {\bf 0.85} & 0.82 & 0.80 & {\bf 0.85} \\ 
+Sm-like ribonucleoproteins & 0.73 & 0.71 & 0.77 & 0.75 & 0.85 & 0.77 & 0.77 & {\bf 0.87} \\
+Prokaryotic SH3-related domain & 0.81 & -  & - & - & 0.83 & 0.73 & 0.72 & {\bf 0.84} \\
  \hline
- {\bf SMURFLite performs best}  & & & & & & & \\
+{\bf HHPred performs best}  & & & & & & & &\\
 \hline
-Cyclophilin-like & 0.67 & 0.61 & 0.7 & {\bf 0.85} & 0.82 & 0.80 & {\bf 0.85} \\ 
-Sm-like ribonucleoproteins & 0.73 & 0.71 & 0.77 & {\bf 0.85} & 0.77 & 0.77 & {\bf 0.87} \\
-Prokaryotic SH3-related domain & 0.81 & -  & - & {\bf 0.83} & 0.73 & 0.72 & {\bf 0.84} \\
+Translation proteins SH3-like & 0.83 & 0.81 & {\bf 0.86} & 0.71 & 0.62 & - & 0.63 & 0.63\\
  \hline
-{\bf HHPred performs best}  & & & & & & &\\
+ {\bf CNFPred performs best} & & & & & & & &\\
 \hline
-Translation proteins SH3-like & 0.83 & 0.81 & {\bf 0.86} & 0.62 & - & 0.63 & 0.63\\
+PDZ domain-like & 0.96 & {\bf 1.0} & 0.99 & {\bf 1.0} & 0.97 & 0.95 & 0.95 & 0.96 \\
+FMN-binding split barrel & 0.62 & 0.82 & 0.61 & {\bf 0.93} & - & - & - & -\\
  \hline
- {\bf RAPTOR performs best} & & & & & & &\\
+{\bf HMMER performs best}  & & & & & & & &  \\
 \hline
-PDZ domain-like & 0.96 & {\bf 1.0} & 0.99 & 0.97 & 0.95 & 0.95 & 0.96 \\
-FMN-binding split barrel & 0.62 & {\bf 0.82} & 0.61 & - & - & - & -\\
- \hline
-{\bf HMMER performs best}  & & & & & & & \\
-\hline
-Electron Transport accessory proteins & {\bf 0.84} & - & 0.77 & 0.66 & - & 0.68  & 0.68\\
+Electron Transport accessory proteins & {\bf 0.84} & - & 0.77 & - & 0.66 & - & 0.68  & 0.68\\
 \hline
 \end{tabular*}}\\{Note: for SMURFLite, value indicated is the best of all
-values from~\cite{Daniels:2012dg}. For MRFy, SimEv is simulated evolution. A 
-dash ('-') in a result entry indicates the method failed on these structures, 
+values from~\cite{Daniels:2012dg}. 
+MRFy legend: [1]: MRFy without simulated evolution. 
+[2]: MRFy with simulated evolution. 
+[3]: MRFy with simulated evolution and initial guess provided by SMURFLite.
+A dash ('-') in a result entry indicates the method failed on these structures, 
 i.e. an AUC of less than 0.6}
 \end{table*}
 \end{center}
@@ -1232,8 +1287,6 @@ profile.
 Representing these query sequences as sets of residue frequency vectors should
 help, and there may be other approaches to consider.
 
-We have demonstrated that MRFy is an improvement to SMURFLite, one that brings
-the full power of a Markov random field to bear.
 Thus far, only $\beta$-strand interactions lead to non-local interactions in the
 MRFy Markov random field.
 In the future, we will investigate fitting other secondary structural elements
@@ -1243,7 +1296,8 @@ have been shown to be highly conserved~\cite{Naamati:2009eg, Tirosh:2012iq},
 would appear to fit easily into this model.
 
 \section{Acknowledgements}
-Thanks to Richard Senington for the original local search implementation, and
+Thanks to Richard Senington for the original local search implementation, Jian
+Peng for useful discussions, and
 Sheng Wang for providing access to CNFPred for comparison purposes.
 This work was funded in part by NIH grant 1R01GM080330-01A1 (to L.C.).
 
