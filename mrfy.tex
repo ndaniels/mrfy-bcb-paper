@@ -1,5 +1,5 @@
-\documentclass{acm_proc_article-sp}
-
+% \documentclass{acm_proc_article-sp}
+\documentclass[blockstyle,times,preprint]{sigplanconf}
 
 %\usepackage{scicite}
 \usepackage{amsmath}
@@ -46,11 +46,17 @@
 \title{MRFy: Remote Homology Detection for Beta-Structural Proteins
   Using Markov Random Fields and Stochastic Search}
 
-\author{Noah M. Daniels \hspace*{8pt} Andrew Gallant \hspace*{8pt} Norman 
-Ramsey \hspace*{8pt} 
-Lenore Cowen\thanks{Corresponding author: lenore.cowen@tufts.edu}
-\\ Department of Computer Science, Tufts University \\ 161 College Ave, 
-Medford, MA 02155.}
+\authorinfo{Noah M. Daniels \and Andrew Gallant \and Norman Ramsey
+\and Lenore Cowen\thanks{Corresponding author: lenore.cowen@tufts.edu}}
+           {Department of Computer Science, Tufts University\\
+           161 College Ave, Medford, MA 02155.}
+
+% 
+% \author{Noah M. Daniels \hspace*{8pt} Andrew Gallant \hspace*{8pt} Norman 
+% Ramsey \hspace*{8pt} 
+% Lenore Cowen\thanks{Corresponding author: lenore.cowen@tufts.edu}
+% \\ Department of Computer Science, Tufts University \\ 161 College Ave, 
+% Medford, MA 02155.}
 
 \date{\today}
 
@@ -65,7 +71,8 @@ Medford, MA 02155.}
 We introduce MRFy, a tool for protein remote homology detection that captures
 beta-strand dependencies in the Markov random field.
 On a diverse set of SCOP beta-structural superfamilies, MRFy shows a mean 20\%
-improvement in Area Under the Curve as compared to HMMER, 34\% improvement as
+improvement in Area Under the Curve for the motif recognition problem as 
+compared to HMMER, 34\% improvement as
 compared to RAPTOR, 17\% improvement as compared to HHPred, and a 32\% 
 improvement as compared to CNFPred.
 MRFy was implemented in the Haskell functional programming language, and
@@ -172,8 +179,8 @@ considered in \cite{Daniels:2012dg}, we show a mean 3.5\% (median 2.2\%)
 improvement in Area Under Curve (AUC) for
 $\beta$-structural motif recognition as compared to the SMURFLite results 
 in~\cite{Daniels:2012dg}.
-By these same benchmarks, we show a mean 20\% (median 10\%) improvement over
-HMMER (\cite{Eddy:1998ut}), a mean 34\% (median
+For the same benchmark set, MRFy initialized using SMURFLite shows a mean 20\% 
+(median 10\%) improvement over HMMER (\cite{Eddy:1998ut}), a mean 34\% (median
 23\%) improvement as compared to RAPTOR (\cite{Xu:2003p3417}),
 a mean 32\% (median 19\%) improvement over CNFPred~\cite{JianzhuMa:2012cp},
 and a mean 17\% (median 21\%) improvement in AUC 
@@ -402,7 +409,7 @@ Thus, if we wish to consider all possible paths through a Markov random field
 for a protein sequence, we must consider as many as 
 $600^{10} \approx 6 \times 10^{27}$ possible paths through the model.
 
-\subsection{Stochastic search}
+\subsection{Stochastic search}\label{stochastic-search}
 
 Since an exhaustive search for an optimal alignment of a protein sequence to a
 Markov random field is exponential in complexity, we turn to stochastic search
@@ -500,6 +507,11 @@ We scale only the distances between $\beta$-strands.
 We inject a small amount of noise into the placements, so that 
 population-based models, such as multi-start simulated annealing and genetic
 algorithms, start with heterogenous solutions.
+\textbf{This is the initial guess method that we used to generate
+the results in Tables~\ref{ss-propeller},~\ref{ss-barwin}, 
+and~\ref{ss-sandwich} in Figure~\ref{roc-curves}, and the MRFy$^1$ and MRFy$^2$ 
+results in Table~\ref{mrfy-auc}.}
+
   
 Finally, we implemented a model that attempts to unify the SMURFLite and
 MRFy approaches.
@@ -512,7 +524,10 @@ We wish to use $a^\prime$ as an initial guess for MRFy, but we must first add
 in the $\beta$-strands that were removed.
 In order to do so, we greedily move the placement of each $\beta$-strand in
 $a^\prime$ as needed to make room for those other $\beta$-strands.
-The resulting alignment $a$ becomes the initial guess for MRFy.
+\textbf{The resulting alignment $a$ becomes the initial guess for MRFy.
+This is the initial guess method that we used to generate
+the reuslts for MRFy$^3$ in Table~\ref{mrfy-auc}.}
+
 
 
 Since we do not know how to determine when a stochastic search process has found
@@ -528,8 +543,13 @@ has failed to improve after a user-specified number of generations.
   
 In practice, these criteria are easily combined, with a convergence approach
 often halting searches early with good results, while the generation- or 
-time-based limit ensuring that the search does not take longer than a user is
+time-based limit ensures that the search does not take longer than a user is
 willing to wait.
+We test different termination conditions in 
+Tables~\ref{ss-propeller},~\ref{ss-barwin}, and~\ref{ss-sandwich};
+the results in Table~\ref{mrfy-auc} and Figure~\ref{roc-curves} are all 
+generated with a fixed 30 second time limit.
+
 We next describe the alternative heuristics that MRFy implements for stochastic
 search: simulated annealing, a genetic algorithm, and a local search strategy.
 
@@ -715,6 +735,11 @@ moves do not violate the constraints.
 Next, score each candidate placement $s'_{ij}$.
 Finally, set $s$ to the best-scoring candidate placement $s'_{ij}$.
 Upon termination, return $s$ as a new solution.
+Based on the comparative results of different stochastic search methods in 
+Tables~\ref{ss-propeller},~\ref{ss-barwin},~and~\ref{ss-sandwich},
+we used local search to generate all MRFy results in Table~\ref{mrfy-auc} 
+and Figure~\ref{roc-curves}.
+
 
 \begin{figure}[htb!]
 \begin{center}
@@ -723,6 +748,8 @@ Upon termination, return $s$ as a new solution.
    {The diversification step in local search.
    In this example, $\beta$-strand placements in the middle of the query
    sequence, corresponding to residue positions 24, 31, and 47, are varied
+   at random within the bounds of the surrounding placements (corresponding
+   to residue positions 17 and 56) in order
    to explore a diverse areas of the search space from a locally optimum 
    solution.}
    \label{diversification}
@@ -929,6 +956,9 @@ five minutes, on a 12-core AMD Opteron.
 MRFy never achieved the global optimum score of 1781, achieved by SMURF, on this
 template, except when local search was given 20 minutes of compute time, in
 which case it found the global optimum two out of ten times.
+These results were obtained using MRFy without simulated evolution,
+and with initial guesses provided by the template-based model as described in 
+Section~\ref{stochastic-search}.
 These results show that local search outperforms the other search strategies,
 and presents the tradeoff between the running time and accuracy of stochastic 
 search.}
@@ -981,6 +1011,9 @@ For Local Search, we show results for time limits of 10 seconds, 30 seconds and
 five minutes, on a 12-core AMD Opteron.
 The ``Optimal'' column indicates the fraction of runs for each search method
 that achieved the global optimum.
+These results were obtained using MRFy without simulated evolution,
+and with initial guesses provided by the template-based model as described in 
+Section~\ref{stochastic-search}.
 These results show that local search outperforms the other search strategies,
 and presents the tradeoff between the running time and accuracy of stochastic 
 search.}
@@ -1051,6 +1084,9 @@ For Local Search, we show results for time limits of 10 seconds, 30 seconds and
 five minutes, on a 12-core AMD Opteron.
 The ``Optimal'' column indicates the fraction of runs for each search method
 that achieved the global optimum.
+These results were obtained using MRFy without simulated evolution,
+and with initial guesses provided by the template-based model as described in 
+Section~\ref{stochastic-search}.
 These results show that local search outperforms the other search strategies,
 and presents the tradeoff between the running time and accuracy of stochastic 
 search.}
@@ -1151,8 +1187,9 @@ We note that the running time required for SMURFLite with an interleave
 threshold of 4 was roughly 10 minutes; MRFy required only 30 seconds to achieve
 comparable results.
 
-Without using SMURFLite to provide an initial guess, MRFy outperforms SMURFLite 
-in terms of AUC on four of the $\beta$-barrel 
+Without using SMURFLite to provide an initial guess, and instead using the
+template-based model as described in Section~\ref{stochastic-search}, MRFy 
+outperforms SMURFLite in terms of AUC on four of the $\beta$-barrel 
 superfamilies, while SMURFLite outperforms MRFy on three.
 With SMURFLite initial guesses, MRFy outperformed SMURFLite on all but one
 superfamily.
@@ -1172,6 +1209,9 @@ the cases where HMMER, RAPTOR, or HHPred performed best.
   \fbox{\includegraphics[width=2.8in]{50249-roc.pdf}}
    \caption{ROC curves and AUC statistic for the 
    ``Nucleic acid-binding proteins'' superfamily.
+   For this analysis, MRFy was run using the options corresponding to
+    ``MRFy$^2$'' in Table~\ref{mrfy-auc}; namely, local search with a time
+    limit of 30 seconds, and template-based initial guesses.
    }
    \label{roc-curves}
  \end{center}
@@ -1220,8 +1260,12 @@ Electron Transport accessory proteins & {\bf 0.84} & - & 0.77 & - & 0.66 & - & 0
 \hline
 \end{tabular*}}\\{Note: for SMURFLite, value indicated is the best of all
 values from~\cite{Daniels:2012dg}. 
-MRFy legend: [1]: MRFy without simulated evolution. 
-[2]: MRFy with simulated evolution. 
+MRFy results were using local search with a time limit of 30 seconds.
+MRFy legend: [1]: MRFy without simulated evolution, with initial guess
+provided by the template-based model as described in 
+Section~\ref{stochastic-search}. 
+[2]: MRFy with simulated evolution, and initial guess provided by the
+template-based model. 
 [3]: MRFy with simulated evolution and initial guess provided by SMURFLite.
 A dash ('-') in a result entry indicates the method failed on these structures, 
 i.e. an AUC of less than 0.6}
